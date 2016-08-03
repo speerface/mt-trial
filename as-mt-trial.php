@@ -8,8 +8,14 @@
  * License: GPLv2 or later
  */
 
-// the main plugin class
-require_once dirname( __FILE__ ) . '/inc/setup.php';
+// Include the setup class.
+require_once dirname(__FILE__) . '/inc/class-setup.php';
+
+// Include the metaboxes class.
+require_once dirname(__FILE__) . '/inc/class-metaboxes.php';
+
+// Include the access control class.
+require_once dirname(__FILE__) . '/inc/class-access-control.php';
 
 AS_Setup::get_instance();
 

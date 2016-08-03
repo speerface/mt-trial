@@ -1,13 +1,17 @@
 <?php
 
-class AS_Setup {
+class AS_Metaboxes {
 
     public static $instance;
+
+    public function init() {
+
+    }
 
     /**
      * Gets the singleton instance of this class.
      *
-     * @return AS_Setup
+     * @return AS_Metaboxes
      */
     public static function get_instance() {
         if ( ! isset( self::$instance ) ) {
@@ -17,5 +21,4 @@ class AS_Setup {
 
         return self::$instance;
     }
-
 }
