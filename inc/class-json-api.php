@@ -27,8 +27,11 @@ class AS_JSON_API {
     }
 
     public function render_rest_endpoint( WP_REST_Request $request ){
-        $return = array();
-        $filter = $request->get_param( 'filter' );
+
+        $return  = array();
+        $filter  = $request->get_param( 'filter' );
+        $refresh = (bool) $request->get_param( 'refresh' );
+
         $args = array(
             'post_type' => 'as_website',
             'suppress_filters' => false,
@@ -46,10 +49,14 @@ class AS_JSON_API {
 
         foreach ( $posts as $post ) {
 
-            $url = get_post_meta( $post->ID, 'website_url', true );
+            if ( $refresh ) {
+                $url = get_post_meta( $post->ID, 'website_url', true );
 
-            if ( ! $source = get_transient( 'cached_site_' . $url ) ) {
-                $source = AS_Main::get_instance()->cache_website_body( $url );
+                if ( ! $source = get_transient( 'cached_site_' . $url ) ) {
+                    $source = AS_Main::get_instance()->cache_website_body( $url, $post->ID );
+                }
+            } else {
+                $source = get_post_meta( $post->ID, 'website_source', true );
             }
 
             $return[] = array(
@@ -57,7 +64,6 @@ class AS_JSON_API {
                 'title' => $post->post_title,
                 'source' => $source,
             );
-
         }
 
         return $return;

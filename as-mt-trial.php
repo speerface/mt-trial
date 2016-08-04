@@ -23,3 +23,4 @@ require_once dirname(__FILE__) . '/inc/class-json-api.php';
 AS_Main::get_instance();
 
 register_activation_hook( __FILE__, array( 'AS_Main', 'init' ) );
+register_deactivation_hook( __FILE__, array( 'AS_Main', 'teardown' ) );

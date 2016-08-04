@@ -8,7 +8,13 @@ class AS_Main {
         $this->do_setup();
     }
 
-    public function init() {
+    public static function init() {
+        self::add_form_page_rewrite();
+        self::add_websites_post_type();
+        flush_rewrite_rules();
+    }
+
+    public static function teardown() {
         flush_rewrite_rules();
     }
 
@@ -42,7 +48,7 @@ class AS_Main {
         AS_JSON_API::get_instance();
     }
 
-    public function add_websites_post_type() {
+    public static function add_websites_post_type() {
 
         /**
          * Website Post Type
@@ -88,7 +94,7 @@ class AS_Main {
         register_post_type( 'as_website', $args );
     }
 
-    public function add_form_page_rewrite() {
+    public static function add_form_page_rewrite() {
         add_rewrite_rule( '^your-website/?', 'index.php?page=your-website', 'top' );
     }
 
@@ -96,7 +102,7 @@ class AS_Main {
 
         global $wp_query;
 
-        if ( 'your-website' !== $wp_query->query['page'] ) {
+        if ( ! array_key_exists( 'page', $wp_query->query ) || 'your-website' !== $wp_query->query['page'] ) {
             return $template;
         }
 
@@ -135,7 +141,7 @@ class AS_Main {
             exit;
         }
 
-        $new_post = $this->create_new_website_post( $name, $url );
+        $new_post = $this->create_new_website_post( $name, $url, $body );
 
         // There was an error creating the new post object.
         if ( ! $new_post ) {
@@ -148,7 +154,7 @@ class AS_Main {
         exit;
     }
 
-    public function cache_website_body( $url ) {
+    public function cache_website_body( $url, $post_id = false ) {
 
         // The site may potentially be stored as a transient already, check that first.
         if ( $body = get_transient( 'cached_site_' . $url ) ) {
@@ -179,6 +185,11 @@ class AS_Main {
         // Store the site body as a transient.
         set_transient(  'cached_site_' . $url, $body, $cache_length );
 
+        // If a post ID was passed, update the post_meta version of the body as well.
+        if ( $post_id ) {
+            update_post_meta( $post_id, 'website_source', $body );
+        }
+
         return $body;
     }
 
@@ -201,7 +212,7 @@ class AS_Main {
         return false;
     }
 
-    private function create_new_website_post( $name, $url ) {
+    private function create_new_website_post( $name, $url, $body ) {
 
         $new_post = array(
             'post_type'   => 'as_website',
@@ -217,6 +228,7 @@ class AS_Main {
         }
 
         update_post_meta( $post_id, 'website_url', $url );
+        update_post_meta( $post_id, 'website_source', $body );
 
         return $post_id;
     }

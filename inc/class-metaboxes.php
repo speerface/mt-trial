@@ -51,7 +51,7 @@ class AS_Metaboxes {
         }
 
         if ( ! $source = get_transient( 'cached_site_' . $url ) ) {
-            $source = AS_Main::get_instance()->cache_website_body( $url );
+            $source = AS_Main::get_instance()->cache_website_body( $url, $post->ID );
         }
 
         ?>
