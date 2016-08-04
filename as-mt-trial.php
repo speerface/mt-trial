@@ -9,6 +9,7 @@
  */
 
 define( 'AS_MT_PLUGIN_DIR', plugin_dir_path(__FILE__) );
+define( 'AS_MT_PLUGIN_URI', plugin_dir_url(__FILE__) );
 
 // Include the main class.
 require_once dirname( __FILE__ ) . '/inc/class-main.php';

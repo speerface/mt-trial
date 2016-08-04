@@ -36,7 +36,6 @@ class AS_Main {
 
     private function setup_metaboxes() {
         AS_Metaboxes::get_instance();
-        AS_Metaboxes::$instance->init();
     }
 
     private function access_control() {
@@ -79,7 +78,7 @@ class AS_Main {
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => null,
-            'supports'           => array(),
+            'supports'           => array( '' ),
             'capabilities'       => array( 'create_posts' => false ),
             'map_meta_cap'       => true,
         );
@@ -147,11 +146,11 @@ class AS_Main {
         exit;
     }
 
-    private function cache_website_body( $url ) {
+    public function cache_website_body( $url ) {
 
         // The site may potentially be stored as a transient already, check that first.
-        if ( get_transient( 'cached_site_' . $url ) ) {
-            return true;
+        if ( $body = get_transient( 'cached_site_' . $url ) ) {
+            return $body;
         }
 
         $request = wp_remote_get( $url );
@@ -178,7 +177,7 @@ class AS_Main {
         // Store the site body as a transient.
         set_transient(  'cached_site_' . $url, $body, $cache_length );
 
-        return true;
+        return $body;
     }
 
     private function get_cache_time( $cache_string ) {

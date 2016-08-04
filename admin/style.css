@@ -1,0 +1,11 @@
+#postbox-container-1 {
+    display: none;
+}
+
+#poststuff #post-body.columns-2 {
+    margin-right: 0;
+}
+
+#normal-sortables {
+    display: none;
+}
