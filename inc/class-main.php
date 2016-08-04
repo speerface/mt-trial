@@ -20,7 +20,7 @@ class AS_Main {
 
     private function add_hooks() {
 
-        // Add the WEBSITES Custom Post Type.
+        // Add the Websites Custom Post Type.
         add_action( 'init', array( $this, 'add_websites_post_type' ) );
 
         // Add the rewrite rule for your-website.
@@ -47,23 +47,23 @@ class AS_Main {
     public function add_websites_post_type() {
 
         /**
-         * WEBSITE Post Type
+         * Website Post Type
          */
         $labels = array(
-            'name'               => _x( 'WEBSITES', 'post type general name', 'as-mt-trial' ),
-            'singular_name'      => _x( 'WEBSITE', 'post type singular name', 'as-mt-trial' ),
-            'menu_name'          => _x( 'WEBSITES', 'admin menu', 'as-mt-trial' ),
-            'name_admin_bar'     => _x( 'WEBSITE', 'add new on admin bar', 'as-mt-trial' ),
+            'name'               => _x( 'Websites', 'post type general name', 'as-mt-trial' ),
+            'singular_name'      => _x( 'Website', 'post type singular name', 'as-mt-trial' ),
+            'menu_name'          => _x( 'Websites', 'admin menu', 'as-mt-trial' ),
+            'name_admin_bar'     => _x( 'Website', 'add new on admin bar', 'as-mt-trial' ),
             'add_new'            => _x( 'Add New', 'as-mt-trial', 'as-mt-trial' ),
-            'add_new_item'       => __( 'Add New WEBSITE', 'as-mt-trial' ),
-            'new_item'           => __( 'New WEBSITE', 'as-mt-trial' ),
-            'edit_item'          => __( 'Edit WEBSITE', 'as-mt-trial' ),
-            'view_item'          => __( 'View WEBSITE', 'as-mt-trial' ),
-            'all_items'          => __( 'All WEBSITES', 'as-mt-trial' ),
-            'search_items'       => __( 'Search WEBSITES', 'as-mt-trial' ),
-            'parent_item_colon'  => __( 'Parent WEBSITES:', 'as-mt-trial' ),
-            'not_found'          => __( 'No WEBSITES found.', 'as-mt-trial' ),
-            'not_found_in_trash' => __( 'No WEBSITES found in Trash.', 'as-mt-trial' ),
+            'add_new_item'       => __( 'Add New Website', 'as-mt-trial' ),
+            'new_item'           => __( 'New Website', 'as-mt-trial' ),
+            'edit_item'          => __( 'Edit Website', 'as-mt-trial' ),
+            'view_item'          => __( 'View Website', 'as-mt-trial' ),
+            'all_items'          => __( 'All Websites', 'as-mt-trial' ),
+            'search_items'       => __( 'Search Websites', 'as-mt-trial' ),
+            'parent_item_colon'  => __( 'Parent Websites:', 'as-mt-trial' ),
+            'not_found'          => __( 'No Websites found.', 'as-mt-trial' ),
+            'not_found_in_trash' => __( 'No Websites found in Trash.', 'as-mt-trial' ),
         );
 
         $args = array(
