@@ -1,6 +1,6 @@
 <?php
 
-class AS_Setup {
+class AS_Main {
 
     public static $instance;
 
@@ -111,6 +111,7 @@ class AS_Setup {
 
     public function handle_website_submission() {
 
+        // Grab sanitized versions of the $_POST data.
         $nonce = filter_input( INPUT_POST, 'submit_website_nonce', FILTER_SANITIZE_STRING );
         $name  = filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING );
         $url   = filter_input( INPUT_POST, 'url', FILTER_SANITIZE_URL );
@@ -119,40 +120,87 @@ class AS_Setup {
             die( 'Security failed.' );
         }
 
+        // Make sure both fields were submitted.
         if ( empty( $name ) || empty( $url ) ) {
             wp_redirect( site_url( 'your-website?error=missing_fields' ) );
             exit;
         }
 
-        $body = $this->get_website_body( $url );
+        $body = $this->cache_website_body( $url );
 
+        // There was an error retrieving the site.
         if ( ! $body ) {
             wp_redirect( site_url( 'your-website?error=invalid_url' ) );
             exit;
         }
 
-        $new_post = $this->create_new_website_post( $name, $url, $body );
+        $new_post = $this->create_new_website_post( $name, $url );
 
+        // There was an error creating the new post object.
         if ( ! $new_post ) {
             wp_redirect( site_url( 'your-website?error=server' ) );
             exit;
         }
 
+        // Redirect the user to the form with a success status.
         wp_redirect( site_url( 'your-website?success=true' ) );
         exit;
     }
 
-    private function get_website_body( $url ) {
+    private function cache_website_body( $url ) {
+
+        // The site may potentially be stored as a transient already, check that first.
+        if ( get_transient( 'cached_site_' . $url ) ) {
+            return true;
+        }
+
         $request = wp_remote_get( $url );
 
         if ( is_wp_error( $request ) ) {
             return false;
         }
 
-        return $request['body'];
+        $cache_length = 3600;
+        $cache = wp_remote_retrieve_header( $request, 'cache-control' );
+
+        // If requested site is using cache-control headers, try to respect the max-age.
+        if ( ! empty( $cache ) ) {
+
+            $time = $this->get_cache_time( $cache );
+
+            if ( $time ) {
+                $cache_length = $time;
+            }
+        }
+
+        $body = wp_remote_retrieve_body( $request );
+
+        // Store the site body as a transient.
+        set_transient(  'cached_site_' . $url, $body, $cache_length );
+
+        return true;
     }
 
-    private function create_new_website_post( $name, $url, $body ) {
+    private function get_cache_time( $cache_string ) {
+
+        // Max-age is tricky to grab given the number of variations, so parse it from the string.
+        $parts = explode( ',', $cache_string );
+
+        // Loop through each potential part of the cache-control string and try to find max-age.
+        foreach ( $parts as $part ) {
+
+            // If found, return the max-age value.
+            if ( strpos( $part, 'max-age' ) !== false ) {
+                $values = explode( '=', $part );
+                return (int) trim( $values[1] );
+            }
+        }
+
+        // Nothing found, return false.
+        return false;
+    }
+
+    private function create_new_website_post( $name, $url ) {
 
         $new_post = array(
             'post_type'   => 'as_website',
@@ -162,15 +210,14 @@ class AS_Setup {
 
         $post_id = wp_insert_post( $new_post );
 
+        // There was an error creating the post, bail early.
         if ( ! $post_id ) {
             return false;
         }
 
         update_post_meta( $post_id, 'website_url', $url );
-        update_post_meta( $post_id, 'website_body', $body );
 
         return $post_id;
-
     }
 
     private function locate_template_file( $template_name ) {
@@ -201,7 +248,7 @@ class AS_Setup {
     /**
      * Gets the singleton instance of this class.
      *
-     * @return AS_Setup
+     * @return AS_Main
      */
     public static function get_instance() {
         if ( ! isset( self::$instance ) ) {

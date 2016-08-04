@@ -10,8 +10,8 @@
 
 define( 'AS_MT_PLUGIN_DIR', plugin_dir_path(__FILE__) );
 
-// Include the setup class.
-require_once dirname(__FILE__) . '/inc/class-setup.php';
+// Include the main class.
+require_once dirname( __FILE__ ) . '/inc/class-main.php';
 
 // Include the metaboxes class.
 require_once dirname(__FILE__) . '/inc/class-metaboxes.php';
@@ -19,6 +19,6 @@ require_once dirname(__FILE__) . '/inc/class-metaboxes.php';
 // Include the access control class.
 require_once dirname(__FILE__) . '/inc/class-access-control.php';
 
-AS_Setup::get_instance();
+AS_Main::get_instance();
 
-register_activation_hook( __FILE__, array( 'AS_Setup', 'init' ) );
+register_activation_hook( __FILE__, array( 'AS_Main', 'init' ) );
