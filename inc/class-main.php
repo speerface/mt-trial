@@ -15,6 +15,7 @@ class AS_Main {
     public function do_setup() {
         $this->add_hooks();
         $this->setup_metaboxes();
+        $this->setup_api();
     }
 
     private function add_hooks() {
@@ -35,6 +36,10 @@ class AS_Main {
 
     private function setup_metaboxes() {
         AS_Metaboxes::get_instance();
+    }
+
+    private function setup_api() {
+        AS_JSON_API::get_instance();
     }
 
     public function add_websites_post_type() {
