@@ -8,6 +8,8 @@
  * License: GPLv2 or later
  */
 
+define( 'AS_MT_PLUGIN_DIR', plugin_dir_path(__FILE__) );
+
 // Include the setup class.
 require_once dirname(__FILE__) . '/inc/class-setup.php';
 
