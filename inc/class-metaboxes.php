@@ -56,10 +56,13 @@ class AS_Metaboxes {
 
         ?>
         <h3><?php esc_html_e( get_the_title( $post ) ); ?></h3>
+
+        <?php if ( current_user_can( 'manage_options' ) ) : ?>
         <h4><?php esc_html_e( $url ); ?></h4>
-        <textarea cols="30" rows="10" style="width:100%;" readonly>
+            <textarea cols="30" rows="10" style="width:100%;" readonly>
             <?php esc_html_e( $source ); ?>
         </textarea>
+        <?php endif; ?>
         <?php
     }
 

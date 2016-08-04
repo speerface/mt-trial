@@ -17,9 +17,6 @@ require_once dirname( __FILE__ ) . '/inc/class-main.php';
 // Include the metaboxes class.
 require_once dirname(__FILE__) . '/inc/class-metaboxes.php';
 
-// Include the access control class.
-require_once dirname(__FILE__) . '/inc/class-access-control.php';
-
 AS_Main::get_instance();
 
 register_activation_hook( __FILE__, array( 'AS_Main', 'init' ) );

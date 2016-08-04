@@ -15,7 +15,6 @@ class AS_Main {
     public function do_setup() {
         $this->add_hooks();
         $this->setup_metaboxes();
-        $this->access_control();
     }
 
     private function add_hooks() {
@@ -36,11 +35,6 @@ class AS_Main {
 
     private function setup_metaboxes() {
         AS_Metaboxes::get_instance();
-    }
-
-    private function access_control() {
-        AS_Access_Control::get_instance();
-        AS_Access_Control::$instance->init();
     }
 
     public function add_websites_post_type() {
@@ -79,7 +73,10 @@ class AS_Main {
             'hierarchical'       => false,
             'menu_position'      => null,
             'supports'           => array( '' ),
-            'capabilities'       => array( 'create_posts' => false ),
+            'capabilities'       => array(
+                'create_posts' => false,
+                'edit_posts' => 'edit_others_posts',
+            ),
             'map_meta_cap'       => true,
         );
 
