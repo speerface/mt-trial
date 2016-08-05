@@ -6,6 +6,8 @@
  * @version 1.0
  */
 
+namespace Inc;
+
 /**
  * Class AS_JSON_API
  */
@@ -48,11 +50,11 @@ class AS_JSON_API {
     /**
      * Renders the rest endpoint data.
      *
-     * @param WP_REST_Request $request
+     * @param object $request
      *
      * @return array
      */
-    public function render_rest_endpoint( WP_REST_Request $request ){
+    public function render_rest_endpoint( $request ){
 
         $return  = array();
         $filter  = $request->get_param( 'filter' );

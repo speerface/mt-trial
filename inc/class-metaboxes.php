@@ -6,6 +6,8 @@
  * @version 1.0
  */
 
+namespace Inc;
+
 /**
  * Class AS_Metaboxes
  */

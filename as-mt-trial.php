@@ -8,19 +8,15 @@
  * License: GPLv2 or later
  */
 
+namespace Inc;
+
 define( 'AS_MT_PLUGIN_DIR', plugin_dir_path(__FILE__) );
 define( 'AS_MT_PLUGIN_URI', plugin_dir_url(__FILE__) );
 
-// Include the main class.
-require_once dirname( __FILE__ ) . '/inc/class-main.php';
-
-// Include the metaboxes class.
-require_once dirname(__FILE__) . '/inc/class-metaboxes.php';
-
-// Include the json-api class.
-require_once dirname(__FILE__) . '/inc/class-json-api.php';
+// Include the autoloader.
+include dirname( __FILE__ ) . '/inc/autoloader.php';
 
 AS_Main::get_instance();
 
-register_activation_hook( __FILE__, array( 'AS_Main', 'init' ) );
-register_deactivation_hook( __FILE__, array( 'AS_Main', 'teardown' ) );
+register_activation_hook( __FILE__, array( 'Inc\AS_Main', 'init' ) );
+register_deactivation_hook( __FILE__, array( 'Inc\AS_Main', 'teardown' ) );
