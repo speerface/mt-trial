@@ -53,7 +53,7 @@ stored as a transient again.
 
 Perhaps one of the biggest downsides to Transients is that they muddy up the `wp_options` table. This can result in poor 
 performance, as that table isn't well-indexed. While this is definitely a concern in high volumes, the ease of use of Transients
-along with their immediate availability outweighs that risk. Additionally, whenever a Website post is deleted, the transient
+along with their immediate availability outweighs that risk. Additionally, whenever a Website post is permanently deleted, the transient
 for that URL is deleted as well, ensuring that orphan Transients won't linger in the database. This should help avoid an
 over-abundance of Transient entries in the `options` table. 
 
