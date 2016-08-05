@@ -1,19 +1,38 @@
 <?php
+/**
+ * Provides an endpoint for the WP JSON API at /wp/v2/websites
+ *
+ * @package as-mt-trial
+ * @version 1.0
+ */
 
+/**
+ * Class AS_JSON_API
+ */
 class AS_JSON_API {
 
+    /**
+     * @var $instance
+     */
     public static $instance;
 
+    /**
+     * AS_JSON_API constructor.
+     */
     public function __construct() {
         $this->add_hooks();
     }
 
+    /**
+     * Adds the hook for creating the rest endpoint.
+     */
     private function add_hooks() {
-
         add_action( 'rest_api_init', array( $this, 'add_rest_endpoint' ) );
-
     }
 
+    /**
+     * Registers the rest endpoint with the API.
+     */
     public function add_rest_endpoint() {
 
         register_rest_route(
@@ -26,6 +45,13 @@ class AS_JSON_API {
         );
     }
 
+    /**
+     * Renders the rest endpoint data.
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return array
+     */
     public function render_rest_endpoint( WP_REST_Request $request ){
 
         $return  = array();
@@ -37,18 +63,22 @@ class AS_JSON_API {
             'suppress_filters' => false,
         );
 
+        // Merge in any passed filters to the arguments.
         if ( ! empty( $filter ) ) {
             $args = array_merge( $args, $filter );
         }
 
         $posts = get_posts( $args );
 
+        // Return an empty array if no items are found.
         if ( empty( $posts ) ) {
             return $return;
         }
 
         foreach ( $posts as $post ) {
 
+            // If the refresh parameter is passed, retrieve any expired source code. Otherwise,
+            // simply return the post_meta.
             if ( $refresh ) {
                 $url = get_post_meta( $post->ID, 'website_url', true );
 

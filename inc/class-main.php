@@ -1,29 +1,57 @@
 <?php
+/**
+ * Provides the main set of functionality for the plugin, including registering the post type, adding rewrites, and
+ * enqueuing the additional files.
+ *
+ * @package as-mt-trial
+ * @version 1.0
+ */
 
+/**
+ * Class AS_Main
+ */
 class AS_Main {
 
+    /**
+     * @var $instance
+     */
     public static $instance;
 
+    /**
+     * AS_Main constructor.
+     */
     public function __construct() {
         $this->do_setup();
     }
 
+    /**
+     * Adds the rewrites and registers the post type before flushing permalinks.
+     */
     public static function init() {
         self::add_form_page_rewrite();
         self::add_websites_post_type();
         flush_rewrite_rules();
     }
 
+    /**
+     * Flushes permalinks when plugin is deactivated.
+     */
     public static function teardown() {
         flush_rewrite_rules();
     }
 
+    /**
+     * Runs setup functions to add hooks and trigger the other class methods.
+     */
     public function do_setup() {
         $this->add_hooks();
         $this->setup_metaboxes();
         $this->setup_api();
     }
 
+    /**
+     * Adds hooks and filters for performing various operations.
+     */
     private function add_hooks() {
 
         // Add the Websites Custom Post Type.
@@ -40,14 +68,23 @@ class AS_Main {
         add_action( 'admin_post_nopriv_submit_website', array( $this, 'handle_website_submission' ) );
     }
 
+    /**
+     * Instantiate the AS_Metaboxes singleton.
+     */
     private function setup_metaboxes() {
         AS_Metaboxes::get_instance();
     }
 
+    /**
+     * Instantiate the AS_JSON_API singleton.
+     */
     private function setup_api() {
         AS_JSON_API::get_instance();
     }
 
+    /**
+     * Registers the Websites custom post type.
+     */
     public static function add_websites_post_type() {
 
         /**
@@ -94,10 +131,21 @@ class AS_Main {
         register_post_type( 'as_website', $args );
     }
 
+    /**
+     * Adds the rewrite rule for the your-website permalink.
+     */
     public static function add_form_page_rewrite() {
         add_rewrite_rule( '^your-website/?', 'index.php?page=your-website', 'top' );
     }
 
+    /**
+     * Loads the website-form.php template for the your-website permalink.
+     *
+     * Triggered by the template_include hook.
+     *
+     * @param string $template - the template file to load.
+     * @return bool|string
+     */
     public function load_form_template( $template ) {
 
         global $wp_query;
@@ -116,6 +164,11 @@ class AS_Main {
         return $template;
     }
 
+    /**
+     * Handles the your-website form submission.
+     *
+     * Triggered by the admin_post_ hook.
+     */
     public function handle_website_submission() {
 
         // Grab sanitized versions of the $_POST data.
@@ -154,6 +207,15 @@ class AS_Main {
         exit;
     }
 
+    /**
+     * Caches the source code of a site for the given URL. If a post ID is provided,
+     * it also sets that source code as the post_meta of 'website_source'.
+     *
+     * @param string $url - the URL to get the content for.
+     * @param bool $post_id - an optional post ID to set the post meta for.
+     *
+     * @return bool|mixed|string
+     */
     public function cache_website_body( $url, $post_id = false ) {
 
         // The site may potentially be stored as a transient already, check that first.
@@ -193,6 +255,13 @@ class AS_Main {
         return $body;
     }
 
+    /**
+     * Parses a cache-control header to get the max-age property.
+     *
+     * @param string $cache_string - the cache-control value.
+     *
+     * @return bool|int
+     */
     private function get_cache_time( $cache_string ) {
 
         // Max-age is tricky to grab given the number of variations, so parse it from the string.
@@ -212,6 +281,15 @@ class AS_Main {
         return false;
     }
 
+    /**
+     * Creates a new as_website post from the submitted data.
+     *
+     * @param string $name - the website name.
+     * @param string $url - the website URL.
+     * @param string $body - the website source code.
+     *
+     * @return bool|int|WP_Error
+     */
     private function create_new_website_post( $name, $url, $body ) {
 
         $new_post = array(
@@ -233,6 +311,14 @@ class AS_Main {
         return $post_id;
     }
 
+    /**
+     * Loads a named template file from the plugin, searching in the child and parent themes
+     * for an override first.
+     *
+     * @param string $template_name - the template file name.
+     *
+     * @return bool|string
+     */
     private function locate_template_file( $template_name ) {
 
         // Template name may have been passed with a slash; remove it.
