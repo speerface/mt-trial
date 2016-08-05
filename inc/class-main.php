@@ -234,7 +234,7 @@ class AS_Main {
             return false;
         }
 
-        $cache_length = 3600;
+        $cache_length = apply_filters( 'as_mt_cache_length', 3600 );
         $cache = wp_remote_retrieve_header( $request, 'cache-control' );
 
         // If requested site is using cache-control headers, try to respect the max-age.
