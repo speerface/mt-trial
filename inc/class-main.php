@@ -214,7 +214,7 @@ class AS_Main {
      * it also sets that source code as the post_meta of 'website_source'.
      *
      * @param string $url - the URL to get the content for.
-     * @param bool $post_id - an optional post ID to set the post meta for.
+     * @param bool   $post_id - an optional post ID to set the post meta for.
      *
      * @return bool|mixed|string
      */
@@ -359,5 +359,4 @@ class AS_Main {
 
         return self::$instance;
     }
-
 }

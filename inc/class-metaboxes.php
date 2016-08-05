@@ -78,7 +78,7 @@ class AS_Metaboxes {
      * Renders the website source code metabox. Displays the website source code in a
      * textarea for easy viewing and copy/pasting.
      *
-     * @param WP_Post $post
+     * @param \WP_Post $post - the current Post object.
      */
     public function render_site_source_metabox( $post ) {
 

@@ -50,7 +50,7 @@ class AS_JSON_API {
     /**
      * Renders the rest endpoint data.
      *
-     * @param object $request
+     * @param object $request - the request object.
      *
      * @return array
      */
