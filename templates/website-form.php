@@ -51,11 +51,11 @@ get_header(); ?>
             <form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
 
                 <label for="name">Website Name
-                    <input type="text" name="name" id="name" placeholder="<?php esc_attr_e( 'Enter your website name...' ); ?>" />
+                    <input type="text" name="name" id="name" placeholder="<?php esc_attr_e( 'Enter your website name...' ); ?>" required />
                 </label>
 
                 <label for="url">Website URL
-                    <input type="text" name="url" id="url" placeholder="<?php esc_attr_e( 'e.g. http://google.com' ); ?>">
+                    <input type="text" name="url" id="url" placeholder="<?php esc_attr_e( 'e.g. http://google.com' ); ?>" required />
                 </label>
 
                 <?php wp_nonce_field( 'submit_website', 'submit_website_nonce' ); ?>
