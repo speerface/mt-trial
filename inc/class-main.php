@@ -68,6 +68,9 @@ class AS_Main {
         // Add endpoint for the form submission.
         add_action( 'admin_post_submit_website', array( $this, 'handle_website_submission' ) );
         add_action( 'admin_post_nopriv_submit_website', array( $this, 'handle_website_submission' ) );
+
+        // Add hook to delete cached transient data on post delete.
+        add_action( 'before_delete_post', array( $this, 'delete_website_transient' ) );
     }
 
     /**
@@ -343,7 +346,26 @@ class AS_Main {
 
         // File wasn't found, return false.
         return false;
+    }
 
+    /**
+     * Deletes the transient for this post to avoid build up of old transient data.
+     *
+     * @param integer $post_id - the Post ID.
+     */
+    public function delete_website_transient( $post_id ) {
+
+        if ( 'as_website' !== get_post_type( $post_id ) ) {
+            return;
+        }
+
+        $url = get_post_meta( $post_id, 'website_url', true );
+
+        if ( empty( $url ) ) {
+            return;
+        }
+
+        delete_transient( 'cached_site_' . $url );
     }
 
     /**
